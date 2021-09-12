@@ -9,8 +9,14 @@ def main():
 	avg = average(grades)
 	print('Average: ' + str(avg))
 
-	count = int(input('How many grades do you have total: '))
-    if count <
+	count = input('How many grades do you have total: ')
+	if len(count) < 1:
+		print('Enter number of grades')
+		return 1
+	count = int(count)
+	if count < 6: 
+		print('Must have at least 6 grades')
+		return 1
 	grades = input('Enter grades: ')
 	
 	# Check data

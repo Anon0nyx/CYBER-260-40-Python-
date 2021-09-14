@@ -9,13 +9,13 @@ def main():
 	avg = average(grades)
 	print('Average: ' + str(avg))
 
-	count = input('How many grades do you have total: ')
-	if len(count) < 1:
-		print('Enter number of grades')
-		return 1
-	count = int(count)
+	try:
+		count = int(input('How many grades do you have total: '))
+	except ValueError:
+		print('\n\tEnter a number of grades\n')
+		return 
 	if count < 6: 
-		print('Must have at least 6 grades')
+		print('\n\tMust have at least 6 grades\n')
 		return 1
 	grades = input('Enter grades: ')
 	
@@ -53,7 +53,11 @@ def check_data(grades, count):
 
 	# Alter data and re-check before returning
 	grades = grades.split(',')
-	grades = [int(grade) for grade in grades]
+	try:
+		grades = [int(grade) for grade in grades]
+	except ValueError:
+		print('\n\tEnter numerical grades\n')
+		return 1
 	for grade in grades:
 		if (grade > 100 or grade < 0): 
 			print('\n\tEnsure grades are < 100 and > 0\n')

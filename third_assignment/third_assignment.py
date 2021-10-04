@@ -1,7 +1,12 @@
+# Author: Dylan
+# Course: CYBER-260-40
+# Program: Parse through a Master Boot Record and print out the status byte, partition byte, and the first sector address
+# Date: Sept 14th, 2021
 import struct
 
 def main():
 	mbr = bytearray()
+	# Attempt to open the MDR file and read the first 512 bytes
 	try:
 		with open('block.dd', 'rb') as binary_file:
 			mbr = binary_file.read(512)

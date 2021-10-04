@@ -13,24 +13,30 @@ def main():
 
 	# Create user value key and input user value 
 	try:
-		key = winreg.CreateKey(winreg.HKEY_CURRENT_USER, "Software\\" + "userInput")
+		foo = winreg.CreateKey(winreg.HKEY_CURRENT_USER, "Software\\" + "userInput")
 	except WindowsError as err:
 		print("Failed to create input key: " + err)
 	try:
-		winreg.SetValue(key, "input", winreg.REG_SZ, userValue)
+		winreg.SetValue(foo, "input", winreg.REG_SZ, userValue)
 		# Using the same key as the user input, create the value time and set it to the time
-		winreg.SetValue(key, "time", winreg.REG_SZ, time)
+		winreg.SetValue(foo, "time", winreg.REG_SZ, time)
 	except WindowsError as err:
 		print("Failed to set registry values: " + err)
 	# Create cwd key and input the cwd into this key
 	try:
-		key = winreg.CreateKey(winreg.HKEY_CURRENT_USER, "Software\\" + "cwd")
+		bar = winreg.CreateKey(winreg.HKEY_CURRENT_USER, "Software\\" + "cwd")
 	except WindowsError as err:
 		print("Failed to create wd key: " + err)
 	try:
-		winreg.SetValue(key, "AValue", winreg.REG_SZ, cwd)
+		winreg.SetValue(bar, "cwd", winreg.REG_SZ, cwd)
 	except WindowsError as err:
 		print("Failed to set registry value: " + err)
+	userInput = winreg.QueryValue(foo, "input")
+	time = winreg.QueryValue(foo, "time")
+	cwd = winreg.QueryValue(bar, "cwd")
+	print(userInput)
+	print(time)
+	print(cwd)
 
 if __name__ == "__main__":
 	main()

@@ -1,3 +1,7 @@
+# Name:		Dylan
+# To:		Instructor, CYBER-260-40
+# Program:	Create two registry keys, store user input and current time in the first and cwd in the second
+# Date:		Oct 3rd, 2021
 import winreg
 import sys
 import os
@@ -13,27 +17,30 @@ def main():
 
 	# Create user value key and input user value 
 	try:
-		foo = winreg.CreateKey(winreg.HKEY_CURRENT_USER, "Software\\" + "userInput")
+		firstKey = winreg.CreateKey(winreg.HKEY_CURRENT_USER, "Software\\" + "userInput")
 	except WindowsError as err:
 		print("Failed to create input key: " + err)
 	try:
-		winreg.SetValue(foo, "input", winreg.REG_SZ, userValue)
+		winreg.SetValue(firstKey, "input", winreg.REG_SZ, userValue)
 		# Using the same key as the user input, create the value time and set it to the time
-		winreg.SetValue(foo, "time", winreg.REG_SZ, time)
+		winreg.SetValue(firstKey, "time", winreg.REG_SZ, time)
 	except WindowsError as err:
 		print("Failed to set registry values: " + err)
 	# Create cwd key and input the cwd into this key
 	try:
-		bar = winreg.CreateKey(winreg.HKEY_CURRENT_USER, "Software\\" + "cwd")
+		secondKey = winreg.CreateKey(winreg.HKEY_CURRENT_USER, "Software\\" + "cwd")
 	except WindowsError as err:
 		print("Failed to create wd key: " + err)
 	try:
-		winreg.SetValue(bar, "cwd", winreg.REG_SZ, cwd)
+		winreg.SetValue(secondKey, "cwd", winreg.REG_SZ, cwd)
 	except WindowsError as err:
 		print("Failed to set registry value: " + err)
-	userInput = winreg.QueryValue(foo, "input")
-	time = winreg.QueryValue(foo, "time")
-	cwd = winreg.QueryValue(bar, "cwd")
+
+	# Collect each of the values from the registry
+	userInput = winreg.QueryValue(firstKey, "input")
+	time = winreg.QueryValue(firstKey, "time")
+	cwd = winreg.QueryValue(secondKey, "cwd")
+	# Print these values to the screen
 	print(userInput)
 	print(time)
 	print(cwd)

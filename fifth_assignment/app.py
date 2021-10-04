@@ -1,7 +1,7 @@
 import winreg
 import sys
 import os
-import datetime
+from datetime import datetime
 
 def main():
 	# Variable assignment

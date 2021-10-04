@@ -7,7 +7,7 @@ import struct
 class Server:
 	# Initialize the host and port variables which are always localhost and 8080
 	host = '127.0.0.1'
-	port = 8080
+	port = 5000
 
 	# Init function for instance variables
 	def __init__(self):
@@ -25,7 +25,9 @@ class Server:
 	def receive_data(self):
 		self.sock.bind((Server.host, Server.port))
 		self.sock.listen(1)
+		print("[*] Listening for connection")
 		con, addr = self.sock.accept()
+		print("[+] Connection received")
 		data = bytearray(con.recv(15))
 		self.parse_mbr(data)
 

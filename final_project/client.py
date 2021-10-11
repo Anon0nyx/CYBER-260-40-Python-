@@ -36,7 +36,7 @@ class socket_instance:
 	def check_ports():
 		return 0
 
-	def show_options():
+	def display_options():
 		logged_in = True
 		while logged_in:
 			option = input("""
@@ -79,13 +79,29 @@ def login_or_create_user():
 		return conn
 
 def main():
-	conn = login_or_create_user()
+	conn = ""
+	choice = input("""
+	Login or Create Account
+		1 - Login
+		2 - Create account
+: """)
+	if choice == "1":
+		username = input("Enter username: ")
+		password = input("Enter password: ")
+		conn = socket_instance(username, password)
+		conn.login()
+	elif choice == "2":
+		username = input("Enter new username: ")
+		password = input("Enter new password: ")
+		conn = socket_instance(username, password)
+		conn.create_user()
+
 	data = conn.sock.recv(4096)
 	print(data)
 	if data == b"LOGGEDIN":
-		show_options()
+		conn.display_options()
 	elif data == b"CREATED":
-		show_options()
+		conn.display_options()
 	elif data == b"LOGINFAILED":
 		print("Incorrect username or password.")
 	else:

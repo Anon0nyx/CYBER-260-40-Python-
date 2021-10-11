@@ -1,6 +1,7 @@
 import sqlite3
 import socket
 import extra_functions as ef
+import time
 
 def configure_database():
 	try:
@@ -23,7 +24,8 @@ def configure_database():
 	return sqlConn
 
 class Server:
-	def __init__(self):
+	def __init__(self, db):
+		self.db = db
 		self.sock = socket.socket()
 		self.sock.bind(("localhost", 8080))
 		self.sock.listen(5)
@@ -33,7 +35,15 @@ class Server:
 		print("Creating user (server)")
 		data = self.client_sock.recv(4096)
 		data = data.decode("utf-8")
-		print(data)
+		data = str(data)
+		data = data.split(":")
+		username = data[0]
+		password = data[1]
+		key = data[2]
+		query = f"INSERT INTO client_info VALUES ('{username}', '{password}', '{key}');"
+		print(query)
+		search = self.db.execute(query)
+		time.sleep(10)
 
 	def login_user():
 		data = self.client_sock.recv(4096)
@@ -50,28 +60,32 @@ def main():
 	db = configure_database()
 	if not db:
 		return 0
-	server = Server()
+	server = Server(db)
 	while True:
-		data = server.client_sock.recv(4096)
+		data = server.client_sock.recv(5)
 		data = data.decode('utf-8')
 		data = str(data)
+		print(data)
+		print("CODE2")
+		print(data == "CODE2")
 		if data == "DONE":
 			print("Done Receiving.")
 			break
-		elif data == "CREATE":
+		elif data == "CODE2":
 			server.create_user()
-			server.client_sock.send(b"CREATED")
-		elif data == "LOGIN":
+			server.client_sock.send(b"CODE2")
+		elif data == "CODE1":
 			server.login_user()
-			server.client_sock.send(b"LOGGEDIN")
-		elif data == "UPLOAD":
+			server.client_sock.send(b"CODE1")
+		elif data == "CODE3":
 			server.upload_file()
-		elif data == "DOWNLOAD":
+		elif data == "CODE4":
 			server.download_file()
+		else:
+			server.client_sock.send(b"CODE0")
 	server.client_sock.send(b"Thank you for connecting.")
 	server.client_sock.close()
 	server.sock.close()
 
 if __name__ == "__main__":
-	while True:
-		main()
+	main()

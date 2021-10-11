@@ -30,7 +30,9 @@ class Server:
 		self.client_sock, self.address = self.sock.accept()
 
 	def create_user(self):
+		print("Creating user (server)")
 		data = self.client_sock.recv(4096)
+		data = data.decode("utf-8")
 		print(data)
 
 	def login_user():

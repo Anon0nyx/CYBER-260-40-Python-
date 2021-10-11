@@ -99,13 +99,15 @@ def main():
 	data = conn.sock.recv(4096)
 	print(data)
 	if data == b"LOGGEDIN":
-		conn.display_options()
+		print("Logged in")
 	elif data == b"CREATED":
-		conn.display_options()
+		print("User created")
 	elif data == b"LOGINFAILED":
 		print("Incorrect username or password.")
+		return 0
 	else:
 		print("Server error.")
+		return 0
 	logout = conn.sock.recv(4096)
 	print(logout)
 

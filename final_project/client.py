@@ -1,11 +1,30 @@
 import socket
 import extra_functions as ef
+from Crypto.PublicKey import RSA
+
+def generate_keys(username):
+	key = RSA.generate(2048)
+
+	private_key = key.export_key()
+	file_out = open(f"./keys/{username}_priv.pem", "wb")
+	file_out.write(private_key)
+	file_out.close()
+	private_key = private_key.decode()
+
+	public_key = key.publickey().export_key()
+	file_out = open(f"./keys/{username}_pub.pem", "wb")
+	file_out.write(public_key)
+	file_out.close()
+	public_key = public_key.decode()
+
+	return [public_key, private_key]
 
 class socket_instance:
 	def __init__(self, username, password):
 		self.username = username
 		self.password = password
 		self.sock = socket.socket()
+		
 		try:
 			self.sock.connect(("localhost", 8080))
 			print("Connected to file server")
@@ -17,8 +36,10 @@ class socket_instance:
 		password = input("Enter password: ")
 		self.username = username
 		self.password = password
+		
 		data = f"{self.username}:{self.password}"
 		self.sock.send(data.encode('utf-8'))
+		
 		return 0
 
 	def create_user(self):
@@ -26,24 +47,36 @@ class socket_instance:
 		password = input("Enter password: ")
 		self.username = username
 		self.password = password
-		#keys = generate_keys()
-		#pub_key = keys[1]
-		pub_key = "testingkey"
+		
+		keys = generate_keys(username)
+		pub_key = keys[1]
+		
 		data = f"{self.username}:{self.password}:{pub_key}"
 		self.sock.send(data.encode("utf-8"))
+		
 		return 0
 
 	def upload_file(self):
 		filename = input("Enter the filename to upload: ")
 		filetosend = open(filename, "rb")
-		self.sock.send(b"CODE3")
+		self.sock.send(b"CODE4")
 
 	def download_file(self):
 		filename = input("Enter the filename to download: ")
-		self.sock.send(b"CODE4")
+		self.sock.send(b"CODE5")
 
-	def check_ports():
+	def check_ports(self):
+		self.sock.send(b"CODE3")
+		data = self.sock.recv(4096)
+		print(data.decode("utf-8"))
 		return 0
+
+	def show_files(self):
+		self.sock.send(b"CODE3")
+		data = self.sock.recv(4096)
+		print(data.decode("utf-8"))
+		return 0
+
 
 def main():
 	conn = ""
@@ -61,9 +94,7 @@ def main():
 		conn.sock.send(b"CODE2")
 		conn.create_user()
 
-	print("Sent data")
 	data = conn.sock.recv(4096)
-	print(data)
 	if data == b"CODE1" or data == b"CODE2":
 		print("Logged in")
 		logged_in = True
@@ -95,7 +126,7 @@ def main():
 		return 0
 	
 	logout = conn.sock.recv(4096)
-	print(logout)
+	print(logout.decode())
 
 	conn.sock.close()
 

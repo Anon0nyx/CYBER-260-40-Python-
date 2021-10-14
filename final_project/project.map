@@ -1,0 +1,11 @@
+Finish user creation
+finish user login
+Finish user creation by using login function with newly created data, allowing new users to auto login
+Create server encryption keys
+Create methods for creating client RSA keys
+Create method for sending public key to server
+Store public key in db using logged in data from user
+Create functions for encrypting and decrypting files 
+Create functions for uploading files to server
+Create functions for download files from server
+Create port scanner to have that functionality
